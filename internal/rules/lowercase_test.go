@@ -17,6 +17,7 @@ func TestLowercaseRule_Check(t *testing.T) {
 		{"ok lowercase", "starting server", false},
 		{"bad uppercase", "Starting server", true},
 		{"ok leading space then lowercase", "  starting server", false},
+		{"ok lowercase", "starting Server", false},
 	}
 
 	for _, tt := range tests {

@@ -22,13 +22,11 @@ func (r LowercaseRule) Check(_ *analysis.Pass, lc LogCall, _ RuleContext) []Issu
 			continue
 		}
 		if !unicode.IsLower(ch) {
-			return []Issue{
-				{
-					RuleID:  r.ID(),
-					Message: "log message must start with a lowercase letter",
-					Node:    lc.MsgExpr,
-				},
-			}
+			return []Issue{{
+				RuleID:  r.ID(),
+				Message: "log message must start with a lowercase letter",
+				Node:    lc.MsgExpr,
+			}}
 		}
 		return nil
 	}
