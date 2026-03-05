@@ -12,7 +12,6 @@ import (
 type Config struct {
 	EnabledRules		map[string]bool
 	SensitiveKeywords	[]string
-	AllowPunctuation	bool
 }
 
 
@@ -35,7 +34,6 @@ func Default() *Config {
 			"bearer",
 			"credential",
 		},
-		AllowPunctuation: false,
 	}
 }
 
