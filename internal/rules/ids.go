@@ -15,4 +15,3 @@ func KnownIDs() map[string]struct{} { // структура, потому что
 		RuleNoSensitive:    {},
 	}
 }
-

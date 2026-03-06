@@ -3,17 +3,17 @@ package config
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/Shyyw1e/selectel-linter-test/internal/rules"
 )
 
-
 type Config struct {
-	EnabledRules		map[string]bool
-	SensitiveKeywords	[]string
+	EnabledRules      map[string]bool
+	SensitiveKeywords []string
+	SensitivePatterns []string
 }
-
 
 func Default() *Config {
 	return &Config{
@@ -34,6 +34,11 @@ func Default() *Config {
 			"bearer",
 			"credential",
 		},
+		SensitivePatterns: []string{
+			`\bapi[_-]?key\b`,
+			`\bbearer\b`,
+			`\bpassword\b`,
+		},
 	}
 }
 
@@ -52,18 +57,31 @@ func (c *Config) Validate() error {
 		}
 	}
 
-	normalized := make([]string, 0, len(c.SensitiveKeywords))
+	normalizedKeywords := make([]string, 0, len(c.SensitiveKeywords))
 	for _, kw := range c.SensitiveKeywords {
 		kw = strings.ToLower(strings.TrimSpace(kw))
 		if kw == "" {
 			continue
 		}
-		normalized = append(normalized, kw)
+		normalizedKeywords = append(normalizedKeywords, kw)
 	}
-	if len(normalized) == 0 {
-		return errors.New("sensitive_keywords is empty after normalisation")
+	if len(normalizedKeywords) == 0 {
+		return errors.New("sensitive_keywords is empty after normalization")
 	}
-	c.SensitiveKeywords = normalized
+	c.SensitiveKeywords = normalizedKeywords
+
+	normalizedPatterns := make([]string, 0, len(c.SensitivePatterns))
+	for _, p := range c.SensitivePatterns {
+		p = strings.TrimSpace(p)
+		if p == "" {
+			continue
+		}
+		if _, err := regexp.Compile(p); err != nil {
+			return fmt.Errorf("invalid sensitive pattern %q: %w", p, err)
+		}
+		normalizedPatterns = append(normalizedPatterns, p)
+	}
+	c.SensitivePatterns = normalizedPatterns
 
 	return nil
 }

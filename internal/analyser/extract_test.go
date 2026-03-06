@@ -8,10 +8,10 @@ import (
 
 func TestExtractString(t *testing.T) {
 	tests := []struct {
-		name    string
-		expr    ast.Expr
-		want    string
-		wantOK  bool
+		name   string
+		expr   ast.Expr
+		want   string
+		wantOK bool
 	}{
 		{
 			name:   "basic literal",
@@ -30,9 +30,9 @@ func TestExtractString(t *testing.T) {
 			wantOK: true,
 		},
 		{
-			name: "non-string literal",
-			expr: &ast.BasicLit{Kind: token.INT, Value: "42"},
-			want: "",
+			name:   "non-string literal",
+			expr:   &ast.BasicLit{Kind: token.INT, Value: "42"},
+			want:   "",
 			wantOK: false,
 		},
 	}

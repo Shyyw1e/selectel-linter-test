@@ -8,8 +8,10 @@ import (
 func TestSensitiveRule_Check(t *testing.T) {
 	r := SensitiveRule{}
 	node := ast.NewIdent("msg")
+
 	ctx := RuleContext{
 		SensitiveKeywords: []string{"password", "token", "api_key"},
+		SensitivePatterns: []string{`\bapi[-_]?key\b`, `\bbearer\b`},
 	}
 
 	tests := []struct {
@@ -18,8 +20,10 @@ func TestSensitiveRule_Check(t *testing.T) {
 		wantHit bool
 	}{
 		{"ok safe", "user authenticated successfully", false},
-		{"bad password", "user password is invalid", true},
-		{"bad token mixed case", "Token validated", true},
+		{"bad keyword password", "user password is invalid", true},
+		{"bad keyword mixed case", "Token validated", true},
+		{"bad pattern api-key", "api-key rotated", true},
+		{"bad pattern bearer", "authorization bearer abc", true},
 	}
 
 	for _, tt := range tests {

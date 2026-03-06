@@ -9,7 +9,7 @@ import (
 )
 
 type Analyser struct {
-	cfg *config.Config
+	cfg      *config.Config
 	ruleList []rules.Rule
 }
 
@@ -19,14 +19,14 @@ func NewAnalyser(cfg *config.Config) *analysis.Analyzer {
 	}
 
 	a := &Analyser{
-		cfg: cfg,
+		cfg:      cfg,
 		ruleList: rules.DefaultRules(),
 	}
 
 	return &analysis.Analyzer{
 		Name: "loglint",
-		Doc: "checls log message style rules for slog/zap",
-		Run: a.run,
+		Doc:  "checks log message style rules for slog/zap",
+		Run:  a.run,
 	}
 }
 
@@ -37,6 +37,7 @@ func (a *Analyser) run(pass *analysis.Pass) (any, error) {
 
 	ctx := rules.RuleContext{
 		SensitiveKeywords: a.cfg.SensitiveKeywords,
+		SensitivePatterns: a.cfg.SensitivePatterns,
 	}
 
 	for _, file := range pass.Files {
@@ -63,9 +64,9 @@ func (a *Analyser) run(pass *analysis.Pass) (any, error) {
 					}
 
 					pass.Report(analysis.Diagnostic{
-						Pos: issue.Node.Pos(),
-						End: issue.Node.End(),
-						Message: issue.Message,
+						Pos:            issue.Node.Pos(),
+						End:            issue.Node.End(),
+						Message:        issue.Message,
 						SuggestedFixes: issue.Fixes,
 					})
 				}
@@ -74,5 +75,6 @@ func (a *Analyser) run(pass *analysis.Pass) (any, error) {
 			return true
 		})
 	}
+
 	return nil, nil
 }

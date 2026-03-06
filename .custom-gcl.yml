@@ -1,0 +1,6 @@
+version: v2.8.0
+
+plugins:
+  - module: github.com/Shyyw1e/selectel-linter-test
+    import: github.com/Shyyw1e/selectel-linter-test/plugin
+    path: .

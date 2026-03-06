@@ -7,22 +7,23 @@ import (
 )
 
 type LogCall struct {
-	Kind string
-	Level string
-	Msg string 
+	Kind    string
+	Level   string
+	Msg     string
 	MsgExpr ast.Expr
-	Call *ast.CallExpr
+	Call    *ast.CallExpr
 }
 
 type RuleContext struct {
 	SensitiveKeywords []string
+	SensitivePatterns []string
 }
 
 type Issue struct {
-	RuleID string
+	RuleID  string
 	Message string
-	Node ast.Node
-	Fixes []analysis.SuggestedFix
+	Node    ast.Node
+	Fixes   []analysis.SuggestedFix
 }
 
 type Rule interface {
